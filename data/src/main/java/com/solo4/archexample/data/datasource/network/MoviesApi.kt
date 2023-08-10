@@ -2,6 +2,7 @@ package com.solo4.archexample.data.datasource.network
 
 import com.solo4.archexample.data.BuildConfig
 import com.solo4.archexample.data.model.MovieEntity
+import com.solo4.archexample.data.model.SearchEntity
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -16,5 +17,5 @@ interface MoviesApi {
     suspend fun getMovieById(
         @Query("apikey") apiKey: String = BuildConfig.REMOTE_API_KEY,
         @Query("i") movieId: Int
-    ): MovieEntity
+    ): SearchEntity
 }
