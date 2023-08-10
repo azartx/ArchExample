@@ -6,29 +6,27 @@ import com.solo4.archexample.data.model.SearchEntity
 import com.solo4.archexample.domain.usecase.movieslist.model.Movie
 import com.solo4.archexample.domain.repository.MoviesRepository
 import com.solo4.archexample.domain.usecase.movieslist.model.Rating
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.launch
 
 class MoviesRepositoryImpl(private val moviesDataSource: MoviesDataSource) : MoviesRepository {
 
     private val _moviesListFlow = MutableSharedFlow<List<Movie>>(extraBufferCapacity = 1)
+    override val movies: SharedFlow<List<Movie>> = _moviesListFlow.asSharedFlow()
 
-    override fun updateMoviesListByKeyword(keyword: String): Flow<List<Movie>> {
-        return _moviesListFlow.asSharedFlow().apply {
-            CoroutineScope(Dispatchers.IO).launch {
-                _moviesListFlow.emit(
-                    moviesDataSource.getMoviesListByKeyword(keyword).search.map { mapMovieToDomain(it) }
-                )
-            }
+    override suspend fun updateMoviesListByKeyword(keyword: String): Result<Unit> {
+        return runCatching {
+            val result = moviesDataSource
+                .getMoviesListByKeyword(keyword)
+                .search
+                .map { mapMovieToDomain(it) }
+            _moviesListFlow.emit(result)
         }
     }
 
-    override suspend fun getMovieById(id: Int): Movie {
-        throw Exception()
+    override suspend fun getMovieById(id: Int): Result<Movie> {
+        throw Exception("NotImplementedYet")
     }
 
     private fun mapMovieToDomain(searchEntity: SearchEntity) = Movie(

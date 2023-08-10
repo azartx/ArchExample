@@ -30,7 +30,9 @@ class MovieListAdapter : RecyclerView.Adapter<MovieListViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieListViewHolder {
         return MovieListViewHolder(
-            ItemRecyclerviewMovieBinding.inflate(LayoutInflater.from(parent.context))
+            ItemRecyclerviewMovieBinding.inflate(
+                LayoutInflater.from(parent.context), parent, false
+            )
         )
     }
 

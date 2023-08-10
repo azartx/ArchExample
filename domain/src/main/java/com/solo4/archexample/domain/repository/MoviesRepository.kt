@@ -1,9 +1,10 @@
 package com.solo4.archexample.domain.repository
 
 import com.solo4.archexample.domain.usecase.movieslist.model.Movie
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharedFlow
 
 interface MoviesRepository {
-    fun updateMoviesListByKeyword(keyword: String): Flow<List<Movie>>
-    suspend fun getMovieById(id: Int): Movie
+    val movies: SharedFlow<List<Movie>>
+    suspend fun updateMoviesListByKeyword(keyword: String): Result<Unit>
+    suspend fun getMovieById(id: Int): Result<Movie>
 }
